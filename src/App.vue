@@ -2,16 +2,14 @@
   import { reactive } from 'vue';
 
   const estado = reactive({
+
     numeros:{
-      primeiroNumero: "",
-      segundoNumero: "",
+      primeiroNumero: 0,
+      segundoNumero: 0,
+      operacao: "somar",
+      resultado: 0,
     },
 
-    options: {
-      operacao: "",
-    },
-
-    resultado: null
   })
 
   const recuperarPrimeiroNumero = (e) => {
@@ -22,17 +20,21 @@
   }
 
   const calcularNumeros = () => {
-    const {primeiroNumero, segundoNumero} = estado
-    const num1 = parseInt(primeiroNumero)
-    const num2 = parseInt(segundoNumero)
+    const num1 = parseInt(estado.numeros.primeiroNumero)
+    const num2 = parseInt(estado.numeros.segundoNumero)
 
-      if(estado.options.operacao == "somar"){
+    if (isNaN(num1) || isNaN(num2)) {
+    estado.numeros.resultado = 0
+    return;
+  }
+
+      if(estado.numeros.operacao == "somar"){
         estado.resultado = num1 + num2
       }
-      else if(estado.options.operacao == "subtrair"){
+      else if(estado.numeros.operacao == "subtrair"){
         estado.resultado = num1 - num2
       }
-      else if(estado.options.operacao == "dividir"){
+      else if(estado.numeros.operacao == "dividir"){
         estado.resultado = num1 / num2
       }
       else{
@@ -45,10 +47,10 @@
   <main>
     <h1>Calculadora</h1>
   
-    <input class="inputControl" type="number" @keyup="recuperarPrimeiroNumero">
-    <input class="inputControl" type="number" @keyup="recuperarSegundoNumero">
-
-    <select v-model="estado.options.operacao" @change="calcularNumeros">
+    <input v-model="estado.numeros.primeiroNumero" @input="calcularNumeros" class="inputControl" type="number" @keyup="recuperarPrimeiroNumero">
+    <input v-model="estado.numeros.segundoNumero" @input="calcularNumeros" class="inputControl" type="number" @keyup="recuperarSegundoNumero">
+    
+    <select v-model="estado.numeros.operacao" @change="calcularNumeros">
       <option value="somar">somar</option>
       <option value="subtrair">subtrair</option>
       <option value="dividir">dividir</option>
